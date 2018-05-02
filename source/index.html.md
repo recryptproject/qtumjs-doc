@@ -1,5 +1,5 @@
 ---
-title: QtumJS API Reference
+title: RecryptJS API Reference
 
 language_tabs:
   - typescript
@@ -10,73 +10,73 @@ search: true
 
 # Introduction
 
-> To install qtumjs
+> To install recryptjs
 
 ```
-npm install qtumjs
+npm install recryptjs
 ```
 
-QtumJS is a JavaScript library for developing DApp on the Qtum blockchain. You can use this library to develop frontend UI that runs in the browser, as well as backend server scripts that run in NodeJS.
+RecryptJS is a JavaScript library for developing DApp on the Recrypt blockchain. You can use this library to develop frontend UI that runs in the browser, as well as backend server scripts that run in NodeJS.
 
 The main classes are:
 
 Class | Description
 --------- | -----------
-QtumRPCRaw | Direct access to `qtumd`'s blockchain RPC service, using JSONRPC 1.0 calling convention.
-QtumRPC | Wrapper for `QtumRPCRaw`, to provide interface like JSONRPC 2.0.
+RecryptRPCRaw | Direct access to `recryptd`'s blockchain RPC service, using JSONRPC 1.0 calling convention.
+RecryptRPC | Wrapper for `RecryptRPCRaw`, to provide interface like JSONRPC 2.0.
 Contract | An abstraction for interacting with smart contracts. Handles [ABI encoding/decoding](https://github.com/ethereum/wiki/wiki/Ethereum-Contract-ABI).
 
-QtumJS is developed using [TypeScript](https://www.typescriptlang.org/), and as such, comes with robust type definitions for all the APIs. We recommend using [VSCode](https://code.visualstudio.com/) to take advantage of language support, such as type hinting and autocompletion.
+RecryptJS is developed using [TypeScript](https://www.typescriptlang.org/), and as such, comes with robust type definitions for all the APIs. We recommend using [VSCode](https://code.visualstudio.com/) to take advantage of language support, such as type hinting and autocompletion.
 
 But you can also choose to use plain JavaScript and notepad if you prefer.
 
-This document is the reference for QtumJS API, and its basic uses. For a tutorial-style introduction to QtumJS, see: [QtumBook - ERC20 With QtumJS](https://github.com/qtumproject/qtumbook/blob/master/part2/erc20-js.md).
+This document is the reference for RecryptJS API, and its basic uses. For a tutorial-style introduction to RecryptJS, see: [RecryptBook - ERC20 With RecryptJS](https://github.com/recryptproject/recryptbook/blob/master/part2/erc20-js.md).
 
 
-## Running Qtum RPC
+## Running Recrypt RPC
 
-> To run qtumd in development mode.
+> To run recryptd in development mode.
 
 ```
 docker run -it --rm \
   --name myapp \
   -v `pwd`:/dapp \
-  -p 3889:3889 \
-  hayeah/qtumportal
+  -p 8489:8489 \
+  hayeah/recryptportal
 ```
 
-> To run qtumd for the test network (testnet):
+> To run recryptd for the test network (testnet):
 
 ```
 docker run -it --rm \
   --name myapp \
-  -e "QTUM_NETWORK=testnet" \
+  -e "RECRYPT_NETWORK=testnet" \
   -v `pwd`:/dapp \
-  -p 3889:3889 \
-  hayeah/qtumportal
+  -p 8489:8489 \
+  hayeah/recryptportal
 ```
 
 
-QtumJS relies on `qtumd` to provide the JSON-RPC service for accessing the QTUM blockchain.
+RecryptJS relies on `recryptd` to provide the JSON-RPC service for accessing the RECRYPT blockchain.
 
-For more details, see: [QtumBook - Running QTUM](https://github.com/qtumproject/qtumbook/blob/master/SUMMARY.md#part-1---running-qtum).
+For more details, see: [RecryptBook - Running RECRYPT](https://github.com/recryptproject/recryptbook/blob/master/SUMMARY.md#part-1---running-recrypt).
 
 
 <aside class="notice">
-The default JSON-RPC credential is "qtum:test", running on port 3889
+The default JSON-RPC credential is "recrypt:test", running on port 8489
 </aside>
 
 # ERC20 Example
 
 ```ts
 import {
-  Qtum,
-} from "qtumjs"
+  Recrypt,
+} from "recryptjs"
 
 const repoData = require("./solar.json")
-const qtum = new Qtum("http://qtum:test@localhost:3889", repoData)
+const recrypt = new Recrypt("http://recrypt:test@localhost:8489", repoData)
 
-const myToken = qtum.contract("zeppelin-solidity/contracts/token/CappedToken.sol")
+const myToken = recrypt.contract("zeppelin-solidity/contracts/token/CappedToken.sol")
 
 async function transfer(fromAddr, toAddr, amount) {
   const tx = await myToken.send("transfer", [toAddr, amount], {
@@ -92,48 +92,48 @@ async function transfer(fromAddr, toAddr, amount) {
 ```
 
 Assuming that `solar.json` contains information about your deployed contracts,
-you can use qtumjs to call the token contract's method to transfer tokens.
+you can use recryptjs to call the token contract's method to transfer tokens.
 
-An example [solar.json](https://github.com/qtumproject/qtumbook-mytoken-qtumjs-cli/blob/29fab6dfcca55013c7efa8ee5e91bbc8c40ca55a/solar.development.json.example). This can be generated automatically using the [solar](https://github.com/qtumproject/solar) deployment tool.
+An example [solar.json](https://github.com/recryptproject/recryptbook-mytoken-recryptjs-cli/blob/29fab6dfcca55013c7efa8ee5e91bbc8c40ca55a/solar.development.json.example). This can be generated automatically using the [solar](https://github.com/recryptproject/solar) deployment tool.
 
-The complete example: [qtumproject/qtumbook-mytoken-qtumjs-cli](https://github.com/qtumproject/qtumbook-mytoken-qtumjs-cli)
+The complete example: [recryptproject/recryptbook-mytoken-recryptjs-cli](https://github.com/recryptproject/recryptbook-mytoken-recryptjs-cli)
 
-For contract deployment, see [Solar Smart Contract Deployment Tool](https://github.com/qtumproject/solar).
+For contract deployment, see [Solar Smart Contract Deployment Tool](https://github.com/recryptproject/solar).
 
-For fleshed out tutorial, see [QtumBook - ERC20 With QtumJS](https://github.com/qtumproject/qtumbook/blob/master/part2/erc20-js.md).
+For fleshed out tutorial, see [RecryptBook - ERC20 With RecryptJS](https://github.com/recryptproject/recryptbook/blob/master/part2/erc20-js.md).
 
-# Qtum
+# Recrypt
 
 ```ts
 const repoData = require("./solar.json")
-const qtum = new Qtum("http://qtum:test@localhost:3889", repoData)
+const recrypt = new Recrypt("http://recrypt:test@localhost:8489", repoData)
 ```
 
-The `Qtum` class is an instance of the `qtumjs` API. It provides two main features:
+The `Recrypt` class is an instance of the `recryptjs` API. It provides two main features:
 
-+ Access to the `qtumd` RPC service. It is a subclass of [QtumRPC](#qtumrpc).
++ Access to the `recryptd` RPC service. It is a subclass of [RecryptRPC](#recryptrpc).
 + A factory method to instantiate [Contract](#contract-2) instances, for interacting with deployed contracts.
 
 Arg | Type
 --------- | -----------
 url | string
-  | URL of the qtumd RPC service
+  | URL of the recryptd RPC service
 repoData | [IContractsRepoData](#icontractsrepodata)
   | Information about Solidity contracts.
 
 The `repoData` contains the ABI definitions of all the deployed contracts and libraries, as well as deploy addresses. This information is used to instantiate `Contract` instances.
 
-`Contract` instantiated with `Qtum`'s factory method is able to decode all event types found in `repoData`. Whereas a `Contract` constructed manually is only able to decode event types defined in its scope, a limitation due to how the Solidity compiler output ABI definitions.
+`Contract` instantiated with `Recrypt`'s factory method is able to decode all event types found in `repoData`. Whereas a `Contract` constructed manually is only able to decode event types defined in its scope, a limitation due to how the Solidity compiler output ABI definitions.
 
-It is recommended that you use Qtum to instantiate `Contract` instances.
+It is recommended that you use Recrypt to instantiate `Contract` instances.
 
 ## contract
 
 ```ts
-const myToken = qtum.contract("zeppelin-solidity/contracts/token/CappedToken.sol")
+const myToken = recrypt.contract("zeppelin-solidity/contracts/token/CappedToken.sol")
 ```
 
-> This instantiates the Contract using information [here](https://github.com/qtumproject/qtumbook-mytoken-qtumjs-cli/blob/29fab6dfcca55013c7efa8ee5e91bbc8c40ca55a/solar.development.json.example#L3).
+> This instantiates the Contract using information [here](https://github.com/recryptproject/recryptbook-mytoken-recryptjs-cli/blob/29fab6dfcca55013c7efa8ee5e91bbc8c40ca55a/solar.development.json.example#L3).
 
 A factory method to instantiate a `Contract` instance using the ABI definitions and address found in `repoData`. The Contract instance is configured with an event log decoder that can decode all known event types found in `repoData`.
 
@@ -144,13 +144,13 @@ name | string
 
 ## rawCall
 
-Inherited from [QtumRPC#rawcall](#rawcall-2)
+Inherited from [RecryptRPC#rawcall](#rawcall-2)
 
 # Contract
 
 A class abstraction for interacting with a Smart Contract.
 
-This is a more convenient API than using `QtumRPC` to directly call the RPC's `sendcontract` and `calltocontract` methods. It handles ABI encoding, to convert between JS and Solidity values.
+This is a more convenient API than using `RecryptRPC` to directly call the RPC's `sendcontract` and `calltocontract` methods. It handles ABI encoding, to convert between JS and Solidity values.
 
 * API for confirming transactions.
 * API for invoking contract's methods using `call` or `send` .
@@ -159,21 +159,21 @@ This is a more convenient API than using `QtumRPC` to directly call the RPC's `s
 ## constructor
 
 ```js
-const rpc = new QtumRPC("http://qtum:test@localhost:3889")
+const rpc = new RecryptRPC("http://recrypt:test@localhost:8489")
 
 const myToken = new Contract(rpc, repo.contracts[
   "zeppelin-solidity/contracts/token/CappedToken.sol"
 ])
 ```
 
-> The contract [info](https://github.com/qtumproject/qtumbook-mytoken-qtumjs-cli/blob/29fab6dfcca55013c7efa8ee5e91bbc8c40ca55a/solar.development.json.example#L3) may be generated by [solar](https://github.com/qtumproject/solar).
+> The contract [info](https://github.com/recryptproject/recryptbook-mytoken-recryptjs-cli/blob/29fab6dfcca55013c7efa8ee5e91bbc8c40ca55a/solar.development.json.example#L3) may be generated by [solar](https://github.com/recryptproject/solar).
 
 Arg | Type | Description
 --------- | ----------- | -----------
-rpc | QtumRPC | The RPC instance used to interact with the contract.
+rpc | RecryptRPC | The RPC instance used to interact with the contract.
 info | [IContractInfo](#icontractinfo) | Information for the deployed contract
 
-It is recommended that you use [Qtum#contract](#contract) instead of this constructor.
+It is recommended that you use [Recrypt#contract](#contract) instead of this constructor.
 
 ## call
 
@@ -274,7 +274,7 @@ const result = await myToken.call("mint", ["dcd32b87270aeb980333213da2549c9907e0
 }
 ```
 
-Executes contract method on your own local qtumd node as a "simulation" using `callcontract`. It is free, and does not actually modify the blockchain.
+Executes contract method on your own local recryptd node as a "simulation" using `callcontract`. It is free, and does not actually modify the blockchain.
 
 This is free.
 
@@ -574,7 +574,7 @@ opts | [IRPCWaitForLogsRequest](#irpcwaitforlogsrequest)
 
 ```ts
 const txid = "62fecfd27d71ddb260ac48c73c8f0f87e96d0b3a598ed2c2251caa4e6f9a9d97"
-const receipt = await qrcToken.receipt(txid)
+const receipt = await rrcToken.receipt(txid)
 console.log(JSON.stringify(receipt, null, 2))
 ```
 
@@ -624,26 +624,26 @@ txid | string
 @return | Promise\<[IContractSendReceipt](#icontractsendreceipt)>
   | Transaction receipt, with event logs.
 
-# QtumRPC
+# RecryptRPC
 
 ```ts
-const rpc = new QtumRPC('http://qtum:test@localhost:3889');
+const rpc = new RecryptRPC('http://recrypt:test@localhost:8489');
 ```
 
-This is a JSON-RPC client for direct access to the `qtumd` RPC API. It does not handle any ABI-encoding or decoding for you.
+This is a JSON-RPC client for direct access to the `recryptd` RPC API. It does not handle any ABI-encoding or decoding for you.
 
-You may included the RPC user & password in the URL if required. In the sample, the user is `qtum` and the password is `test`.
+You may included the RPC user & password in the URL if required. In the sample, the user is `recrypt` and the password is `test`.
 
-Note: The `QtumRPC` class has a few undocumented public methods used internally by the `Contract` abstraction. Consider anything undocumented unsupported that could change in the future. Right now `rawCall` is the only public API.
+Note: The `RecryptRPC` class has a few undocumented public methods used internally by the `Contract` abstraction. Consider anything undocumented unsupported that could change in the future. Right now `rawCall` is the only public API.
 
 Arg | Type
 --------- | -----------
 url | string
-    | URL of the qtumd RPC service
+    | URL of the recryptd RPC service
 
 ## rawCall
 
-> Call the `getinfo` RPC method to get basic information about the Qtum blockchain:
+> Call the `getinfo` RPC method to get basic information about the Recrypt blockchain:
 
 ```ts
 const info = await rpc.rawCall("getinfo")
@@ -690,7 +690,7 @@ async function main() {
 
 ## All RPC Methods
 
-All RPC methods supported by qtumd.
+All RPC methods supported by recryptd.
 
 ```
 == Blockchain ==
@@ -799,7 +799,7 @@ getunconfirmedbalance
 getwalletinfo
 importaddress "address" ( "label" rescan p2sh )
 importmulti "requests" "options"
-importprivkey "qtum" ( "label" ) ( rescan )
+importprivkey "recrypt" ( "label" ) ( rescan )
 importprunedfunds
 importpubkey "pubkey" ( "label" rescan )
 importwallet "filename"
@@ -842,7 +842,7 @@ const result = await rpc.rawCall("getblockcount")
 
 ## Example: getnewaddress
 
-Returns a new Qtum address for receiving payments. This might be useful for exchanges that need to generate deposit addresses for users.
+Returns a new Recrypt address for receiving payments. This might be useful for exchanges that need to generate deposit addresses for users.
 
 ```ts
 const result = await rpc.rawCall("getnewaddress")
@@ -1041,7 +1041,7 @@ Options for [Contract#send](#send)
  */
 export interface IContractSendRequestOptions {
   /**
-   * The amount in QTUM to send. eg 0.1, default: 0
+   * The amount in RECRYPT to send. eg 0.1, default: 0
    */
   amount?: number | string
 
@@ -1051,7 +1051,7 @@ export interface IContractSendRequestOptions {
   gasLimit?: number
 
   /**
-   * Qtum price per gas unit, default: 0.00000001, min:0.00000001
+   * Recrypt price per gas unit, default: 0.00000001, min:0.00000001
    */
   gasPrice?: number | string
 
@@ -1275,7 +1275,7 @@ export interface IContractLogEntry extends ILogEntry {
 }
 
 /**
- * The raw log data returned by qtumd, not ABI decoded.
+ * The raw log data returned by recryptd, not ABI decoded.
  */
 export interface ILogEntry extends IRPCGetTransactionReceiptBase {
   /**
@@ -1290,7 +1290,7 @@ export interface ILogEntry extends IRPCGetTransactionReceiptBase {
 }
 
 /**
- * Transaction receipt returned by qtumd
+ * Transaction receipt returned by recryptd
  */
 export interface IRPCGetTransactionReceiptBase {
   blockHash: string
@@ -1451,6 +1451,6 @@ export interface IABIMethod {
 }
 ```
 
-This can be generated automatically using the [solar](https://github.com/qtumproject/solar) deployment tool.
+This can be generated automatically using the [solar](https://github.com/recryptproject/solar) deployment tool.
 
-An example [solar.json](https://github.com/qtumproject/qtumbook-mytoken-qtumjs-cli/blob/29fab6dfcca55013c7efa8ee5e91bbc8c40ca55a/solar.development.json.example).
+An example [solar.json](https://github.com/recryptproject/recryptbook-mytoken-recryptjs-cli/blob/29fab6dfcca55013c7efa8ee5e91bbc8c40ca55a/solar.development.json.example).

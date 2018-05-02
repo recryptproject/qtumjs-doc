@@ -22,4 +22,4 @@ bundle exec middleman server
 ./deploy.sh
 ```
 
-http://qtumproject.github.io/qtumjs-doc
+http://recryptproject.github.io/recryptjs-doc
